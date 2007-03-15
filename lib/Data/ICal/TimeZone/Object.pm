@@ -14,7 +14,15 @@ Returns the timezone identifier for the current zone object
 
 Returns a Data::ICal::Entry::TimeZone which defines the given zone.
 
+=item property( $time )
+
+Returns a datastructure wrapping $time in the timezone
+
 =back
+
+=HEAD1 SEE ALSO
+
+L<Data::ICal::TimeZone>
 
 =cut
 

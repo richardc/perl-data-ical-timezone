@@ -1,6 +1,6 @@
 =head1 NAME
 
-  Data::ICal::TimeZone - timezones for Data::ICal
+Data::ICal::TimeZone - timezones for Data::ICal
 
 =head1 SYNOPSIS
 
@@ -40,7 +40,7 @@ The current zone data was generated from tzdata2007c using Vzic 1.3.
 
 =head1 SEE ALSO
 
-L<Data::ICal::TimeZone::Object>
+L<Data::ICal::TimeZone::Object>, L<Data::ICal>
 
 http://dialspace.dial.pipex.com/prod/dialspace/town/pipexdsl/s/asbm26/vzic/
 
@@ -62,6 +62,4 @@ sub new {
     return $tz->new;
 }
 
-
 1;
-__END__

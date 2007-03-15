@@ -1,3 +1,25 @@
+=head1 NAME
+
+  Data::ICal::TimeZone - timezones for Data::ICal
+
+=head1 SYNOPSIS
+
+  use Data::ICal;
+  use Data::ICal::TimeZone;
+
+  my $cal = Data::ICal->new;
+  my $zone = Data::ICal::TimeZone->new( timezone => 'Europe/London' );
+  $cal->add_event( $zone->definition );
+  my $meeting = Data::ICal::Event->new;
+  $meeting->add_properties(
+    summary => 'Go to the pub',
+    dtstart => [ $opening_time, { TZID => $zone->timezone } ],
+    dtend   => $zone->property( $closing_time ),
+  );
+  $cal->add_event( $meeting );
+
+=cut
+
 package Data::ICal::TimeZone;
 use strict;
 use Carp;
@@ -24,7 +46,7 @@ sub new {
     return $self->instance;
 }
 
-sub event {
+sub definition {
     my $self = shift;
     my @zones = grep {
         $_->ical_entry_type eq 'VTIMEZONE'
@@ -48,23 +70,3 @@ sub _load {
 
 1;
 __END__
-
-=head1 NAME
-
-  Data::ICal::TimeZone - timezones for Data::ICal
-
-=head1 SYNOPSIS
-
-  use Data::ICal;
-  use Data::ICal::TimeZone;
-
-  my $cal = Data::ICal->new;
-  my $zone = Data::ICal::TimeZone->new( timezone => 'Europe/London' );
-  $cal->add_event( $zone->event );
-  my $meeting = Data::ICal::Event->new;
-  $meeting->add_properties(
-    summary => 'Go to the pub',
-    dtstart => [ $opening_time, { TZID => $zone->timezone } ],
-    dtend   => $zone->property( $closing_time ),
-  );
-  $cal->add_event( $meeting );

@@ -10,11 +10,11 @@ Data::ICal::TimeZone - timezones for Data::ICal
   my $cal = Data::ICal->new;
   my $zone = Data::ICal::TimeZone->new( timezone => 'Europe/London' );
   $cal->add_event( $zone->definition );
-  my $event = Data::ICal::Event->new;
+  my $event = Data::ICal::Entry::Event->new;
   $event->add_properties(
       summary => 'Go to the pub',
       dtstart => [ '20070316T1800000' , { TZID => $zone->timezone } ],
-      dtend   => $zone->property( '20070316T230000' ),
+      dtend   => [ '20070316T1800000' , { TZID => $zone->timezone } ],
   );
   $cal->add_event( $event );
 

@@ -14,10 +14,6 @@ Returns the timezone identifier for the current zone object
 
 Returns a Data::ICal::Entry::TimeZone which defines the given zone.
 
-=item property( $time )
-
-Returns a datastructure wrapping $time in the timezone
-
 =back
 
 =HEAD1 SEE ALSO
@@ -48,12 +44,6 @@ sub definition {
 sub timezone {
     my $self = shift;
     return $self->definition->property('tzid')->[0]->value;
-}
-
-sub property {
-    my $self = shift;
-    my $time = shift;
-    return [ $time => { TZID => $self->timezone } ];
 }
 
 sub _load {

@@ -10,13 +10,39 @@
   my $cal = Data::ICal->new;
   my $zone = Data::ICal::TimeZone->new( timezone => 'Europe/London' );
   $cal->add_event( $zone->definition );
-  my $meeting = Data::ICal::Event->new;
-  $meeting->add_properties(
-    summary => 'Go to the pub',
-    dtstart => [ $opening_time, { TZID => $zone->timezone } ],
-    dtend   => $zone->property( $closing_time ),
+  my $event = Data::ICal::Event->new;
+  $event->add_properties(
+      summary => 'Go to the pub',
+      dtstart => [ '20070316T1800000' , { TZID => $zone->timezone } ],
+      dtend   => $zone->property( '20070316T230000' ),
   );
-  $cal->add_event( $meeting );
+  $cal->add_event( $event );
+
+=head1 DESCRIPTION
+
+Data::ICal::TimeZone provides a mechanism for adding the Olsen
+standard timezones to your ical documents, plus a copy of the Olsen
+timezone database.
+
+=head1 METHODS
+
+=over
+
+=item new( timezone => 'zone_name' )
+
+Returns a timezone object, this will be a Data::ICal::TimeZone::Object
+
+=back
+
+=head1 VERSION
+
+The current zone data was generated from tzdata2007c using Vzic 1.3.
+
+=head1 SEE ALSO
+
+L<Data::ICal::TimeZone::Object>
+
+http://dialspace.dial.pipex.com/prod/dialspace/town/pipexdsl/s/asbm26/vzic/
 
 =cut
 
@@ -30,43 +56,12 @@ sub new {
     my %args  = @_;
     my $timezone = delete $args{timezone}
       or croak "No timezone specified";
-    my $tz = __PACKAGE__."::$timezone";
+    my $tz = __PACKAGE__."::Object::$timezone";
     $tz =~ s{/}{::}g;
     $tz->require or croak "Couldn't require $tz: $@";
     return $tz->new;
 }
 
-package Data::ICal::TimeZone::_Base;
-use base qw( Class::Singleton Class::Accessor );
-__PACKAGE__->mk_accessors(qw( _cal ));
-use Data::ICal;
-
-sub new {
-    my $self = shift;
-    return $self->instance;
-}
-
-sub definition {
-    my $self = shift;
-    my @zones = grep {
-        $_->ical_entry_type eq 'VTIMEZONE'
-    } @{ $self->_cal->entries };
-    return $zones[0];
-}
-
-sub property {
-    my $self = shift;
-    my $time = shift;
-    return [ $time => { TZID => $self->timezone } ];
-}
-
-sub _load {
-    my $self = shift;
-    my $ics = shift;
-    my $cal = Data::ICal->new( data => $ics );
-    $self->_cal( $cal );
-    return;
-}
 
 1;
 __END__

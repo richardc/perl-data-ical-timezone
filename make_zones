@@ -13,7 +13,7 @@ for my $infile (find( file => name => '*.ics', in => 'zoneinfo' )) {
     my $zone = $infile;
     $zone =~ s{^zoneinfo/}{};
     $zone =~ s{\.ics$}{};
-    my $module = "Data::ICal::TimeZone::$zone";
+    my $module = "Data::ICal::TimeZone::Object::$zone";
     $module =~ s{/}{::}g;
     my $outfile = "lib/$module.pm";
     $outfile =~ s{::}{/}g;
@@ -24,10 +24,9 @@ for my $infile (find( file => name => '*.ics', in => 'zoneinfo' )) {
     print {$out} <<"END";
 package $module;
 use strict;
-use base qw( Data::ICal::TimeZone::_Base );
+use base qw( Data::ICal::TimeZone::Object );
 
 __PACKAGE__->new->_load( join '', <DATA> );
-sub timezone { '$zone' }
 
 1;
 

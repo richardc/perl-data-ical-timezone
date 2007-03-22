@@ -403,3 +403,4 @@ Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 t/london.t
+META.yml                                 Module meta-data (added by MakeMaker)

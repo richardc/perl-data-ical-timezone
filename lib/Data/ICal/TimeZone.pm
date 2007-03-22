@@ -53,18 +53,30 @@ http://dialspace.dial.pipex.com/prod/dialspace/town/pipexdsl/s/asbm26/vzic/
 
 package Data::ICal::TimeZone;
 use strict;
-use Carp;
 use UNIVERSAL::require;
+use Class::ReturnValue;
 use Data::ICal::TimeZone::List qw( zones  );
+
+sub _error {
+    my $class = shift;
+    my $msg   = shift;
+
+    my $ret = Class::ReturnValue->new;
+    $ret->as_error( errno => 1, message => $msg );
+    return $ret;
+}
 
 sub new {
     my $class = shift;
     my %args  = @_;
     my $timezone = delete $args{timezone}
-      or croak "No timezone specified";
+      or return $class->_error( "No timezone specified" );
+    grep { $_ eq $timezone } $class->zones
+      or return $class->_error( "No such timezone '$timezone'" );
     my $tz = __PACKAGE__."::Object::$timezone";
     $tz =~ s{/}{::}g;
-    $tz->require or croak "Couldn't require $tz: $@";
+    $tz->require
+      or return $class->_error( "Couldn't require $tz: $@" );
     return $tz->new;
 }
 

@@ -32,6 +32,11 @@ timezone database.
 
 Returns a timezone object, this will be a Data::ICal::TimeZone::Object
 
+
+=item zones
+
+Returns the a list of the supported timezones
+
 =back
 
 =head1 VERSION
@@ -50,6 +55,7 @@ package Data::ICal::TimeZone;
 use strict;
 use Carp;
 use UNIVERSAL::require;
+use Data::ICal::TimeZone::List qw( zones  );
 
 sub new {
     my $class = shift;

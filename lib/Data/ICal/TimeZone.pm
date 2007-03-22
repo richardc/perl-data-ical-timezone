@@ -32,12 +32,49 @@ timezone database.
 
 Returns a timezone object, this will be a Data::ICal::TimeZone::Object
 
+Returns a false value upon failure to locate the specified timezone or
+load it's data class; this false value is a Class::ReturnValue object
+and can be queried as to its C<error_message>.
 
 =item zones
 
 Returns the a list of the supported timezones
 
 =back
+
+=head1 DIAGNOSTICS
+
+=over
+
+=item No timezone specified
+
+You failed to specify a C<timezone> argument to ->new
+
+=item No such timezone '%s'
+
+The C<timezone> you specifed to ->new wasn't one this module knows of.
+
+=item Couldn't require Data::ICal::TimeZone::Object::%s: %s
+
+The underlying class didn't compile cleanly.
+
+=back
+
+
+=head1 AUTHOR
+
+Richard Clamp <richardc@unixbeard.net>
+
+=head1 LICENCE AND COPYRIGHT
+
+Copyright 2007, Richard Clamp.  All rights reserved.
+
+This module is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. See L<perlartistic>.
+
+=head1 BUGS
+
+None currently known, please report any you find to the author.
 
 =head1 VERSION
 
@@ -56,6 +93,7 @@ use strict;
 use UNIVERSAL::require;
 use Class::ReturnValue;
 use Data::ICal::TimeZone::List qw( zones  );
+our $VERSION = 1.21;
 
 sub _error {
     my $class = shift;

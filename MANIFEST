@@ -405,6 +405,4 @@ MANIFEST
 MANIFEST.SKIP
 t/london.t
 t/all_zones.t
-META.yml
 Changes
-

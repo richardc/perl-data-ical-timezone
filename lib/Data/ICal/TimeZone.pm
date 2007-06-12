@@ -92,7 +92,7 @@ package Data::ICal::TimeZone;
 use strict;
 use UNIVERSAL::require;
 use Class::ReturnValue;
-use Data::ICal::TimeZone::List qw( zones  );
+use Data::ICal::TimeZone::List qw( zones );
 our $VERSION = 1.21;
 
 sub _error {
@@ -104,6 +104,14 @@ sub _error {
     return $ret;
 }
 
+sub _zone_package {
+    my $class = shift;
+    my $zone = shift;
+    $zone =~ s{-}{_}g;
+    $zone =~ s{/}{::}g;
+    return __PACKAGE__."::Object::$zone";
+}
+
 sub new {
     my $class = shift;
     my %args  = @_;
@@ -111,8 +119,7 @@ sub new {
       or return $class->_error( "No timezone specified" );
     grep { $_ eq $timezone } $class->zones
       or return $class->_error( "No such timezone '$timezone'" );
-    my $tz = __PACKAGE__."::Object::$timezone";
-    $tz =~ s{/}{::}g;
+    my $tz = $class->_zone_package( $timezone );
     $tz->require
       or return $class->_error( "Couldn't require $tz: $@" );
     return $tz->new;

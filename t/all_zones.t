@@ -1,10 +1,11 @@
 #!perl -w
 use strict;
 use Data::ICal::TimeZone;
-use Test::More tests => scalar @{ [ Data::ICal::TimeZone->zones ] };
-
+use Test::More tests => 2 * @{ [ Data::ICal::TimeZone->zones ] };
 
 for my $zone ( Data::ICal::TimeZone->zones ) {
-    eval { Data::ICal::TimeZone->new( timezone => $zone ) };
-    is ($@, '', "Loaded $zone ok" );
+    my $ics = Data::ICal::TimeZone->new( timezone => $zone );
+    ok( $ics, "Loaded $zone ok" )
+        or do { fail( $ics->error_message ); next };
+    is( $ics->timezone, $zone );
 }

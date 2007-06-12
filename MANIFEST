@@ -47,7 +47,7 @@ lib/Data/ICal/TimeZone/Object/Africa/Ndjamena.pm
 lib/Data/ICal/TimeZone/Object/Africa/Niamey.pm
 lib/Data/ICal/TimeZone/Object/Africa/Nouakchott.pm
 lib/Data/ICal/TimeZone/Object/Africa/Ouagadougou.pm
-lib/Data/ICal/TimeZone/Object/Africa/Porto-Novo.pm
+lib/Data/ICal/TimeZone/Object/Africa/Porto_Novo.pm
 lib/Data/ICal/TimeZone/Object/Africa/Sao_Tome.pm
 lib/Data/ICal/TimeZone/Object/Africa/Tripoli.pm
 lib/Data/ICal/TimeZone/Object/Africa/Tunis.pm
@@ -74,7 +74,7 @@ lib/Data/ICal/TimeZone/Object/America/Bahia.pm
 lib/Data/ICal/TimeZone/Object/America/Barbados.pm
 lib/Data/ICal/TimeZone/Object/America/Belem.pm
 lib/Data/ICal/TimeZone/Object/America/Belize.pm
-lib/Data/ICal/TimeZone/Object/America/Blanc-Sablon.pm
+lib/Data/ICal/TimeZone/Object/America/Blanc_Sablon.pm
 lib/Data/ICal/TimeZone/Object/America/Boa_Vista.pm
 lib/Data/ICal/TimeZone/Object/America/Bogota.pm
 lib/Data/ICal/TimeZone/Object/America/Boise.pm
@@ -152,7 +152,7 @@ lib/Data/ICal/TimeZone/Object/America/Panama.pm
 lib/Data/ICal/TimeZone/Object/America/Pangnirtung.pm
 lib/Data/ICal/TimeZone/Object/America/Paramaribo.pm
 lib/Data/ICal/TimeZone/Object/America/Phoenix.pm
-lib/Data/ICal/TimeZone/Object/America/Port-au-Prince.pm
+lib/Data/ICal/TimeZone/Object/America/Port_au_Prince.pm
 lib/Data/ICal/TimeZone/Object/America/Port_of_Spain.pm
 lib/Data/ICal/TimeZone/Object/America/Porto_Velho.pm
 lib/Data/ICal/TimeZone/Object/America/Puerto_Rico.pm

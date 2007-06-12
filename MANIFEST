@@ -160,6 +160,7 @@ lib/Data/ICal/TimeZone/Object/America/Rainy_River.pm
 lib/Data/ICal/TimeZone/Object/America/Rankin_Inlet.pm
 lib/Data/ICal/TimeZone/Object/America/Recife.pm
 lib/Data/ICal/TimeZone/Object/America/Regina.pm
+lib/Data/ICal/TimeZone/Object/America/Resolute.pm
 lib/Data/ICal/TimeZone/Object/America/Rio_Branco.pm
 lib/Data/ICal/TimeZone/Object/America/Santiago.pm
 lib/Data/ICal/TimeZone/Object/America/Santo_Domingo.pm
@@ -405,3 +406,5 @@ MANIFEST.SKIP
 t/london.t
 t/all_zones.t
 META.yml
+Changes
+

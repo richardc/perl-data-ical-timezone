@@ -78,7 +78,7 @@ None currently known, please report any you find to the author.
 
 =head1 VERSION
 
-The current zone data was generated from tzdata2007c using Vzic 1.3.
+The current zone data was generated from tzdata2007f using Vzic 1.3.
 
 =head1 SEE ALSO
 
@@ -93,7 +93,7 @@ use strict;
 use UNIVERSAL::require;
 use Class::ReturnValue;
 use Data::ICal::TimeZone::List qw( zones );
-our $VERSION = 1.21;
+our $VERSION = 1.22;
 
 sub _error {
     my $class = shift;

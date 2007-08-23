@@ -115,6 +115,7 @@ lib/Data/ICal/TimeZone/Object/America/Indiana/Indianapolis.pm
 lib/Data/ICal/TimeZone/Object/America/Indiana/Knox.pm
 lib/Data/ICal/TimeZone/Object/America/Indiana/Marengo.pm
 lib/Data/ICal/TimeZone/Object/America/Indiana/Petersburg.pm
+lib/Data/ICal/TimeZone/Object/America/Indiana/Tell_City.pm
 lib/Data/ICal/TimeZone/Object/America/Indiana/Vevay.pm
 lib/Data/ICal/TimeZone/Object/America/Indiana/Vincennes.pm
 lib/Data/ICal/TimeZone/Object/America/Indiana/Winamac.pm

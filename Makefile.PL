@@ -10,5 +10,13 @@ WriteMakefile(
         'UNIVERSAL::require' => 0,
 
     },
+    'META_MERGE' => {
+        'meta-spec' => { version => 2 },
+        prereqs     => {
+            runtime => {
+                recommends => { 'DateTime::TimeZone::SystemV' => 0 },
+            },
+        },
+    },
 );
 

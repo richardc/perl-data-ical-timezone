@@ -20,9 +20,14 @@ Data::ICal::TimeZone - timezones for Data::ICal
 
 =head1 DESCRIPTION
 
-Data::ICal::TimeZone provides a mechanism for adding the Olsen
-standard timezones to your ical documents, plus a copy of the Olsen
-timezone database.
+Data::ICal::TimeZone provides a mechanism for adding the Olson standard
+timezones to your ical documents.
+
+Where a system time zone database is readable, definitions are built from
+it on demand, so they follow whatever tzdata the system has installed. This
+needs L<DateTime::TimeZone::SystemV>; see L<Data::ICal::TimeZone::Zoneinfo>.
+Otherwise the bundled copy is used, which was generated from tzdata2007g
+and is wrong for any zone whose rules have changed since.
 
 =head1 METHODS
 
@@ -92,7 +97,18 @@ package Data::ICal::TimeZone;
 use strict;
 use UNIVERSAL::require;
 use Class::ReturnValue;
-use Data::ICal::TimeZone::List qw( zones );
+use Data::ICal::TimeZone::Object;
+
+# Zone definitions come from the system time zone database when one is
+# readable, and from the generated classes otherwise. Either may be absent.
+my $SYSTEM    = eval { require Data::ICal::TimeZone::Zoneinfo; 1 } || 0;
+my $GENERATED = eval { require Data::ICal::TimeZone::List;     1 } || 0;
+
+sub zones {
+    my @zones = $SYSTEM ? Data::ICal::TimeZone::Zoneinfo::zones() : ();
+    return @zones if @zones;
+    return $GENERATED ? Data::ICal::TimeZone::List::zones() : ();
+}
 our $VERSION = 1.23;
 
 sub _error {
@@ -120,6 +136,13 @@ sub new {
     grep { $_ eq $timezone } $class->zones
       or return $class->_error( "No such timezone '$timezone'" );
     my $tz = $class->_zone_package( $timezone );
+    return $tz->new if $tz->isa( 'Data::ICal::TimeZone::Object' );
+    if ( my $ics = $SYSTEM && Data::ICal::TimeZone::Zoneinfo::ical( $timezone ) ) {
+        no strict 'refs';
+        @{"${tz}::ISA"} = ( 'Data::ICal::TimeZone::Object' );
+        $tz->new->_load( $ics );
+        return $tz->new;
+    }
     $tz->require
       or return $class->_error( "Couldn't require $tz: $@" );
     return $tz->new;

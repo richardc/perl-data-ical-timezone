@@ -45,6 +45,16 @@ and can be queried as to its C<error_message>.
 
 Returns the a list of the supported timezones
 
+=item source
+
+Reports where the zone definitions are coming from. Returns C<'system'> when
+they are built from the system time zone database, whose location is
+C<$Data::ICal::TimeZone::Zoneinfo::DIR>, so they follow whatever tzdata the
+system has installed. Returns C<'bundled'> when they come from the classes
+under Data::ICal::TimeZone::Object, which were generated from tzdata2007g in
+2007 and are wrong for any zone whose rules have changed since. Returns undef
+when neither source is available.
+
 =back
 
 =head1 DIAGNOSTICS
@@ -108,6 +118,13 @@ sub zones {
     my @zones = $SYSTEM ? Data::ICal::TimeZone::Zoneinfo::zones() : ();
     return @zones if @zones;
     return $GENERATED ? Data::ICal::TimeZone::List::zones() : ();
+}
+
+sub source {
+    # zones() returns a sort, which is not defined in scalar context.
+    my @zones = $SYSTEM ? Data::ICal::TimeZone::Zoneinfo::zones() : ();
+    return 'system' if @zones;
+    return $GENERATED ? 'bundled' : undef;
 }
 our $VERSION = 1.23;
 

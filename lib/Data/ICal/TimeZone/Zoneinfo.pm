@@ -42,8 +42,18 @@ defaults to the C<TZDIR> environment variable, or F</usr/share/zoneinfo>.
 
 =head1 LIMITATIONS
 
-Only each zone's current rule is described, not its history; transitions
-before the most recent rule change are reported using the current rule.
+Only each zone's current rule is described, not its history. The POSIX C<TZ>
+footer of a TZif file gives the zone's final, open-ended rule and nothing
+before it, so transitions earlier than the most recent rule change are
+reported using the current rule. A zone in the middle of a change is
+therefore wrong for the remainder of the old rule: as of tzdata 2026b,
+C<America/Vancouver> has already switched to a permanent C<MST7> footer, so
+it is an hour out for the rest of 2026 and correct from November onwards.
+
+Zones whose transitions are not annual are not described at all. Morocco
+suspends its offset during Ramadan, which follows the lunar calendar and has
+no C<RRULE> equivalent; C<Africa/Casablanca> and C<Africa/El_Aaiun> therefore
+get their base offset with no transitions.
 
 The C<Etc/> zones are omitted, as names such as C<Etc/GMT+5> cannot be
 mapped onto Perl package names.
@@ -69,10 +79,17 @@ my $YEAR = 1970;       # DTSTART is expressed in the epoch year
 
 # Zone names are Area/Location, two or three components deep. Etc/ is
 # skipped because its names cannot be mapped onto package names.
+#
+# Scanning the database costs about 2 ms, and new() calls this once per
+# object, so cache it. The key is $DIR, which callers may change.
+my %CACHE;
 sub zones {
-    return sort grep { !m{\A(?:posix|right|Etc)/} }
-        map { substr $_, length($DIR) + 1 }
-        grep {-f} map { glob "$DIR/$_" } '*/*', '*/*/*';
+    $CACHE{$DIR} ||= [
+        sort grep { !m{\A(?:posix|right|Etc)/} }
+            map { substr $_, length($DIR) + 1 }
+            grep {-f} map { glob "$DIR/$_" } '*/*', '*/*/*'
+    ];
+    return @{ $CACHE{$DIR} };
 }
 
 # TZif v2 and later end with a POSIX TZ string giving the zone's current

@@ -43,7 +43,8 @@ and can be queried as to its C<error_message>.
 
 =item zones
 
-Returns the a list of the supported timezones
+Returns the sorted list of supported timezones: the union of those the system
+database offers and those the bundled classes provide.
 
 =item source
 
@@ -114,18 +115,23 @@ use Data::ICal::TimeZone::Object;
 my $SYSTEM    = eval { require Data::ICal::TimeZone::Zoneinfo; 1 } || 0;
 my $GENERATED = eval { require Data::ICal::TimeZone::List;     1 } || 0;
 
+sub _system_zones {
+    return $SYSTEM ? Data::ICal::TimeZone::Zoneinfo::zones() : ();
+}
+
 sub zones {
-    my @zones = $SYSTEM ? Data::ICal::TimeZone::Zoneinfo::zones() : ();
-    return @zones if @zones;
-    return $GENERATED ? Data::ICal::TimeZone::List::zones() : ();
+    my %seen;
+    my @zones = sort grep { !$seen{$_}++ } _system_zones(),
+        ( $GENERATED ? Data::ICal::TimeZone::List::zones() : () );
+    return @zones;
 }
 
 sub source {
-    # zones() returns a sort, which is not defined in scalar context.
-    my @zones = $SYSTEM ? Data::ICal::TimeZone::Zoneinfo::zones() : ();
+    my @zones = _system_zones();
     return 'system' if @zones;
     return $GENERATED ? 'bundled' : undef;
 }
+
 our $VERSION = 1.23;
 
 sub _error {

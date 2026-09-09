@@ -58,7 +58,8 @@ before it, so transitions earlier than the most recent rule change are
 reported using the current rule. A zone in the middle of a change is
 therefore wrong for the remainder of the old rule: as of tzdata 2026b,
 C<America/Vancouver> has already switched to a permanent C<MST7> footer, so
-it is an hour out for the rest of 2026 and correct from November onwards.
+it is correct from 8 March 2026 onward and was wrong only for the
+already-past 1 January - 8 March 2026 window.
 
 Zones whose transitions are not annual are not described at all. Morocco
 suspends its offset during Ramadan, which follows the lunar calendar and has

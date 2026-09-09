@@ -126,6 +126,7 @@ sub flush { %CACHE = (); return }
 # TZif v2 and later end with a POSIX TZ string giving the zone's current
 # open-ended rule.
 sub _tz_string {
+    return undef unless $_[0] =~ m{\A[A-Za-z0-9_+-]+(?:/[A-Za-z0-9_+-]+){1,2}\z};
     open my $fh, '<:raw', "$DIR/$_[0]" or return undef;
     my $head;
     return undef

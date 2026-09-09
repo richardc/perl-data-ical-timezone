@@ -87,18 +87,35 @@ my @DOW  = qw( SU MO TU WE TH FR SA );
 my $RD   = 1721425;    # cjdn minus this is DateTime's rata die
 my $YEAR = 1970;       # DTSTART is expressed in the epoch year
 
-# Zone names are Area/Location, two or three components deep. Etc/ is
-# skipped because its names cannot be mapped onto package names.
-#
+# Zone names are Area/Location, two or three components deep. $DIR is a
+# literal path, not a glob pattern: Perl's glob splits on whitespace and
+# expands braces, and $DIR comes from the environment.
+sub _scan {
+    my ( $dir, $depth ) = @_;
+    opendir my $dh, $dir or return ();
+    my @found;
+    for my $entry ( readdir $dh ) {
+        next if $entry eq '.' or $entry eq '..';
+        my $path = "$dir/$entry";
+        push @found, $entry if $depth >= 2 and -f $path;
+        push @found, map {"$entry/$_"} _scan( $path, $depth + 1 )
+            if $depth < 3 and -d $path;
+    }
+    return @found;
+}
+
 # Scanning the database costs about 2 ms, and new() calls this once per
 # object, so cache it. The key is $DIR, which callers may change.
 my %CACHE;
 sub zones {
+    # Testing the list rather than the key retries an empty result instead
+    # of memoising it, so a database that appears after first use is found.
     unless ( $CACHE{$DIR} and @{ $CACHE{$DIR} } ) {
+        # Etc/ is skipped because its names cannot be mapped onto package
+        # names; posix/ and right/ are duplicate and leap-second-adjusted
+        # copies of the same zones.
         $CACHE{$DIR} = [
-            sort grep { !m{\A(?:posix|right|Etc)/} }
-                map { substr $_, length($DIR) + 1 }
-                grep {-f} map { glob "$DIR/$_" } '*/*', '*/*/*'
+            sort grep { !m{\A(?:posix|right|Etc)/} } _scan( $DIR, 1 )
         ];
     }
     return @{ $CACHE{$DIR} };

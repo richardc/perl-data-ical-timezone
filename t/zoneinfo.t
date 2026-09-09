@@ -7,8 +7,9 @@ eval { require Data::ICal::TimeZone::Zoneinfo; 1 }
 
 # Frozen ical() output for zones chosen to cover the arithmetic branches:
 # simple DST (London), shifted southern-hemisphere DST (Santiago), a fixed
-# offset with no DST (Casablanca), and a rule whose transition window
-# crosses the year boundary (Cairo).
+# offset with no DST (Kolkata - stable since 1945, unlike Morocco's
+# Ramadan-suspension encoding, which tzdata has reformatted more than once),
+# and a rule whose transition window crosses the year boundary (Cairo).
 my %zones = (
     'Europe/London' => [
         'BEGIN:DAYLIGHT',
@@ -42,11 +43,11 @@ my %zones = (
         'RRULE:FREQ=YEARLY;BYMONTH=4;BYMONTHDAY=2,3,4,5,6,7,8;BYDAY=SU',
         'END:STANDARD',
     ],
-    'Africa/Casablanca' => [
+    'Asia/Kolkata' => [
         'BEGIN:STANDARD',
-        'TZOFFSETFROM:+0100',
-        'TZOFFSETTO:+0100',
-        'TZNAME:+01',
+        'TZOFFSETFROM:+0530',
+        'TZOFFSETTO:+0530',
+        'TZNAME:IST',
         'DTSTART:19700101T000000',
         'END:STANDARD',
     ],

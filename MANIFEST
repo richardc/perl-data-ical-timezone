@@ -1,6 +1,7 @@
 lib/Data/ICal/TimeZone.pm
 lib/Data/ICal/TimeZone/List.pm
 lib/Data/ICal/TimeZone/Object.pm
+lib/Data/ICal/TimeZone/Zoneinfo.pm
 lib/Data/ICal/TimeZone/Object/Africa/Abidjan.pm
 lib/Data/ICal/TimeZone/Object/Africa/Accra.pm
 lib/Data/ICal/TimeZone/Object/Africa/Addis_Ababa.pm

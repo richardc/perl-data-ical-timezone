@@ -52,7 +52,7 @@ You failed to specify a C<timezone> argument to ->new
 
 =item No such timezone '%s'
 
-The C<timezone> you specifed to ->new wasn't one this module knows of.
+The C<timezone> you specified to ->new wasn't one this module knows of.
 
 =item Couldn't require Data::ICal::TimeZone::Object::%s: %s
 

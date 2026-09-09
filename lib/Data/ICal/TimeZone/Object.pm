@@ -16,7 +16,7 @@ Returns a Data::ICal::Entry::TimeZone which defines the given zone.
 
 =back
 
-=HEAD1 SEE ALSO
+=head1 SEE ALSO
 
 L<Data::ICal::TimeZone>
 

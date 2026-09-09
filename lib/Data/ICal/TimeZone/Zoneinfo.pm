@@ -33,12 +33,22 @@ usable database was found.
 Returns an iCalendar document holding a single VTIMEZONE for C<$zone>, or
 undef if it could not be built.
 
+=item flush
+
+Discards the cached zone list, so the next call to C<zones> rescans the
+database.
+
 =back
 
 =head1 CONFIGURATION
 
 C<$Data::ICal::TimeZone::Zoneinfo::DIR> is the database location. It
 defaults to the C<TZDIR> environment variable, or F</usr/share/zoneinfo>.
+
+C<TZDIR> is read once, when the module loads, so C<local $ENV{TZDIR}> has no
+effect afterwards; assign to C<$DIR> instead. A change to C<$DIR> takes effect
+immediately, for both C<zones> and C<ical>. A database updated in place at an
+unchanged C<$DIR> does not; call C<flush> for that.
 
 =head1 LIMITATIONS
 
@@ -84,13 +94,17 @@ my $YEAR = 1970;       # DTSTART is expressed in the epoch year
 # object, so cache it. The key is $DIR, which callers may change.
 my %CACHE;
 sub zones {
-    $CACHE{$DIR} ||= [
-        sort grep { !m{\A(?:posix|right|Etc)/} }
-            map { substr $_, length($DIR) + 1 }
-            grep {-f} map { glob "$DIR/$_" } '*/*', '*/*/*'
-    ];
+    unless ( $CACHE{$DIR} and @{ $CACHE{$DIR} } ) {
+        $CACHE{$DIR} = [
+            sort grep { !m{\A(?:posix|right|Etc)/} }
+                map { substr $_, length($DIR) + 1 }
+                grep {-f} map { glob "$DIR/$_" } '*/*', '*/*/*'
+        ];
+    }
     return @{ $CACHE{$DIR} };
 }
+
+sub flush { %CACHE = (); return }
 
 # TZif v2 and later end with a POSIX TZ string giving the zone's current
 # open-ended rule.

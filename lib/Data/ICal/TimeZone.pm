@@ -56,6 +56,13 @@ under Data::ICal::TimeZone::Object, which were generated from tzdata2007g in
 2007 and are wrong for any zone whose rules have changed since. Returns undef
 when neither source is available.
 
+=item flush
+
+Discards the cached zone list and every definition built from the system time
+zone database, so later calls rebuild them. Call it when the system tzdata has
+been updated in place; a change to C<$Data::ICal::TimeZone::Zoneinfo::DIR> is
+picked up without it.
+
 =back
 
 =head1 DIAGNOSTICS
@@ -115,6 +122,17 @@ use Data::ICal::TimeZone::Object;
 my $SYSTEM    = eval { require Data::ICal::TimeZone::Zoneinfo; 1 } || 0;
 my $GENERATED = eval { require Data::ICal::TimeZone::List;     1 } || 0;
 
+# Definitions built from the system database, keyed on the directory they
+# came from. Class::Singleton cannot be used here: its cache is keyed on
+# class name only, and there is no way to clear it.
+my %BUILT;
+
+sub flush {
+    %BUILT = ();
+    Data::ICal::TimeZone::Zoneinfo::flush() if $SYSTEM;
+    return;
+}
+
 sub _system_zones {
     return $SYSTEM ? Data::ICal::TimeZone::Zoneinfo::zones() : ();
 }
@@ -159,13 +177,18 @@ sub new {
     grep { $_ eq $timezone } $class->zones
       or return $class->_error( "No such timezone '$timezone'" );
     my $tz = $class->_zone_package( $timezone );
-    return $tz->new if $tz->isa( 'Data::ICal::TimeZone::Object' );
-    if ( my $ics = $SYSTEM && Data::ICal::TimeZone::Zoneinfo::ical( $timezone ) ) {
-        no strict 'refs';
-        @{"${tz}::ISA"} = ( 'Data::ICal::TimeZone::Object' );
-        $tz->new->_load( $ics );
-        return $tz->new;
+    if ($SYSTEM) {
+        my $key = join "\0", $Data::ICal::TimeZone::Zoneinfo::DIR, $timezone;
+        return $BUILT{$key} if $BUILT{$key};
+        if ( my $ics = Data::ICal::TimeZone::Zoneinfo::ical($timezone) ) {
+            no strict 'refs';
+            @{"${tz}::ISA"} = ( 'Data::ICal::TimeZone::Object' )
+                unless $tz->isa( 'Data::ICal::TimeZone::Object' );
+            return $BUILT{$key} = $tz->from_ics( $ics );
+        }
     }
+    return $tz->new if $tz->isa( 'Data::ICal::TimeZone::Object' )
+        and $tz->has_instance;
     $tz->require
       or return $class->_error( "Couldn't require $tz: $@" );
     return $tz->new;

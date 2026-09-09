@@ -33,6 +33,13 @@ sub new {
     return $self->instance;
 }
 
+sub from_ics {
+    my ( $class, $ics ) = @_;
+    my $self = bless {}, ref $class || $class;
+    $self->_load( $ics );
+    return $self;
+}
+
 sub definition {
     my $self = shift;
     my @zones = grep {

@@ -101,11 +101,14 @@ None currently known, please report any you find to the author.
 
 =head1 VERSION
 
-The current zone data was generated from tzdata2007g using Vzic 1.3.
+Zone definitions follow the system time zone database when one is available,
+so they are as current as the installed tzdata. Otherwise they fall back to a
+bundled copy generated from tzdata2007g using Vzic 1.3 - present in the CPAN
+release, not in this source repository.
 
 =head1 SEE ALSO
 
-L<Data::ICal::TimeZone::Object>, L<Data::ICal>
+L<Data::ICal::TimeZone::Object>, L<Data::ICal::TimeZone::Zoneinfo>, L<Data::ICal>
 
 http://dialspace.dial.pipex.com/prod/dialspace/town/pipexdsl/s/asbm26/vzic/
 

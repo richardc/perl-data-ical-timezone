@@ -36,7 +36,7 @@ sub new {
 sub from_ics {
     my ( $class, $ics ) = @_;
     my $self = bless {}, ref $class || $class;
-    $self->_load( $ics );
+    return unless $self->_load( $ics );
     return $self;
 }
 
@@ -57,8 +57,9 @@ sub _load {
     my $self = shift;
     my $ics = shift;
     my $cal = Data::ICal->new( data => $ics );
+    return unless $cal;
     $self->_cal( $cal );
-    return;
+    return $cal;
 }
 
 1;

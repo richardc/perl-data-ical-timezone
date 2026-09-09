@@ -184,7 +184,9 @@ sub new {
             no strict 'refs';
             @{"${tz}::ISA"} = ( 'Data::ICal::TimeZone::Object' )
                 unless $tz->isa( 'Data::ICal::TimeZone::Object' );
-            return $BUILT{$key} = $tz->from_ics( $ics );
+            my $obj = $tz->from_ics( $ics )
+                or return $class->_error( "Couldn't parse generated definition for '$timezone'" );
+            return $BUILT{$key} = $obj;
         }
     }
     return $tz->new if $tz->isa( 'Data::ICal::TimeZone::Object' )
